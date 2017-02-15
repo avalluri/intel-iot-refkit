@@ -32,3 +32,6 @@
 	path = meta-clang
 	url = https://github.com/kraj/meta-clang.git
 	branch = krogoth
+[submodule "meta-security"]
+	path = meta-security
+	url = git://git.yoctoproject.org/meta-security
