@@ -1,7 +1,7 @@
 [submodule "openembedded-core"]
 	path = openembedded-core
-	url = https://github.com/pohly/openembedded-core.git
-	branch = master
+	url = https://github.com/avalluri/openembedded-core.git
+	branch = swtpm
 [submodule "bitbake"]
 	path = bitbake
 	url = http://git.openembedded.org/bitbake
@@ -30,5 +30,5 @@
 	url = https://github.com/IntelRealSense/meta-intel-realsense.git
 [submodule "meta-security"]
 	path = meta-security
-	url = https://github.com/pohly/meta-security.git
+	url = https://github.com/avalluri/meta-security.git
 	branch = swtpm
