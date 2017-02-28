@@ -1,10 +1,19 @@
-#!/bin/sh -ex
+#!/bin/bash -ex
+
+# ?? Kill running swtpm if any ??
+killall swtpm || true 
 
 IMAGE_DIR=tmp-glibc/deploy/images/intel-corei7-64
-# LOGFILE=tmp-glibc/log/swtpm_cuse.log
-# rm -f $LOGFILE
-# touch $LOGFILE
-# Beware, need absolute paths!
-# --log file=$(realpath $LOGFILE),level=20
-sudo tmp-glibc/work/*/swtpm-wrappers/1.0-r0/swtpm_cuse_oe.sh -n vtpm0 --tpmstate dir=$(realpath $IMAGE_DIR/my-tpm)
-sudo chown $(id -u) /dev/vtpm0
+export SWTPM_SERVER_SOCKET=${SWTPM_SERVER_SOCKET:-/tmp/swtpm}
+export SWTPM_CTRL_SOCKET=${SWTPM_CTRL_SOCKET:-${SWTPM_SERVER_SOCKET}-ctrl}
+
+LOGFILE=/tmp/swtpm.log
+echo "" > $LOGFILE
+rm -f ${SERVER_SOCKET} ${CTRL_SOCKET}
+
+export TPM_PATH="$(realpath $IMAGE_DIR/my-tpm)"
+
+./tmp-glibc/work/*/swtpm-wrappers/1.0-r0/swtpm_oe.sh socket --server type=unixio,path=${SWTPM_SERVER_SOCKET} --ctrl type=unixio,path=${SWTPM_CTRL_SOCKET} -d --log file=$(realpath $LOGFILE),level=5
+
+#sudo TPM_PATH=$TPM_PATH tmp-glibc/work/*/swtpm-wrappers/1.0-r0/swtpm_oe.sh cuse -n vtpm0 --log file=$(realpath $LOGFILE),level=5
+#sudo chown $(id -u) /dev/vtpm0

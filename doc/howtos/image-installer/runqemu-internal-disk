@@ -1,4 +1,8 @@
 #!/bin/sh -ex
 
+. run-swtpm
+
 IMAGE_DIR=tmp-glibc/deploy/images/intel-corei7-64
-runqemu serial nographic my-installed-image wic intel-corei7-64 "qemuparams=-tpmdev cuse-tpm,id=tpm0,path=/dev/vtpm0 -device tpm-tis,tpmdev=tpm0" ovmf
+runqemu serial nographic my-installed-image wic intel-corei7-64 "qemuparams=-tpmdev unixio-tpm,id=tpm0,path=${SWTPM_SERVER_SOCKET},ctrl-path=${SWTPM_CTRL_SOCKET} -device tpm-tis,tpmdev=tpm0" ovmf
+
+#runqemu serial nographic my-installed-image wic intel-corei7-64 "qemuparams=-tpmdev cuse-tpm,id=tpm0,path=/dev/vtpm0 -device tpm-tis,tpmdev=tpm0" ovmf
