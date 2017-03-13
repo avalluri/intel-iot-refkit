@@ -1,0 +1,10 @@
+[Unit]
+Description=neard wifi handover agent service
+
+[Service]
+Type=dbus
+BusName=org.refkit.neard
+ExecStart=/usr/bin/python /usr/bin/neard-wifi-agent.py
+
+[Install]
+Alias=dbus-org.refkit.neard.service
