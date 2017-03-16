@@ -151,3 +151,9 @@ RDEPENDS_${PN} = " \
     cryptsetup \
     ${@ bb.utils.contains('DISTRO_FEATURES', 'tpm1.2', 'trousers tpm-tools libgcc strace netbase init-ifupdown', '', d) } \
 "
+
+# cryptsetup is currently broken (see replies to "[oe] [meta-oe][PATCH 8/8] lvm2: Move libdevmapper to a separate package")
+# because libdevicemapper does not contain the necessary tools from lvm2. Work around this.
+RDEPENDS_${PN} += " \
+    lvm2 \
+"

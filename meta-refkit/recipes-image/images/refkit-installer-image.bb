@@ -236,6 +236,11 @@ INSTALLER_RDEPENDS_append = " \
     ${@ bb.utils.contains('DISTRO_FEATURES', 'tpm1.2', 'trousers tpm-tools', '', d) } \
 "
 
+# kpartx -s is currently broken (see replies to "[oe] [meta-oe][PATCH 8/8] lvm2: Move libdevmapper to a separate package")
+# because libdevicemapper does not contain the necessary tools from lvm2. Work around this.
+INSTALLER_RDEPENDS_append = " \
+    lvm2 \
+"
 
 inherit image-installer
 
