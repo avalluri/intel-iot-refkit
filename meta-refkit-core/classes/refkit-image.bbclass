@@ -548,23 +548,32 @@ ROOTFS_POSTPROCESS_COMMAND += "refkit_image_system_serialgetty; "
 #upstream commit waiting for review: 
 # http://lists.openembedded.org/pipermail/openembedded-core/2017-February/133151.html
 create_merged_usr_symlinks() {
-    install -m 0755 -d ${IMAGE_ROOTFS}/${base_bindir}
-    install -m 0755 -d ${IMAGE_ROOTFS}/${base_sbindir}
-    install -m 0755 -d ${IMAGE_ROOTFS}/${base_libdir}
-    lnr ${IMAGE_ROOTFS}${base_bindir} ${IMAGE_ROOTFS}/bin
-    lnr ${IMAGE_ROOTFS}${base_sbindir} ${IMAGE_ROOTFS}/sbin
-    lnr ${IMAGE_ROOTFS}${base_libdir} ${IMAGE_ROOTFS}/${baselib}
+    root="$1"
+    install -d $root${base_bindir} $root${base_sbindir} $root${base_libdir}
+    lnr $root${base_bindir} $root/bin
+    lnr $root${base_sbindir} $root/sbin
+    lnr $root${base_libdir} $root/${baselib}
 
     if [ "${nonarch_base_libdir}" != "${base_libdir}" ]; then
-       install -m 0755 -d ${IMAGE_ROOTFS}/${nonarch_base_libdir}
-       lnr ${IMAGE_ROOTFS}${nonarch_base_libdir} ${IMAGE_ROOTFS}/lib
+       install -d $root/${nonarch_base_libdir}
+       lnr $root${nonarch_base_libdir} $root/lib
     fi
 
     # create base links for multilibs
     multi_libdirs="${@d.getVar('MULTILIB_VARIANTS')}"
     for d in $multi_libdirs; do
-        install -m 0755 -d ${IMAGE_ROOTFS}/${exec_prefix}/$d
-        lnr ${IMAGE_ROOTFS}/${exec_prefix}/$d ${IMAGE_ROOTFS}/$d
+        install -d $root/${exec_prefix}/$d
+        lnr $root${exec_prefix}/$d $root/$d
     done
 }
-ROOTFS_PREPROCESS_COMMAND += "${@bb.utils.contains('DISTRO_FEATURES', 'usrmerge', 'create_merged_usr_symlinks; ', '',d)}"
+
+create_merged_usr_symlinks_rootfs() {
+    create_merged_usr_symlinks ${IMAGE_ROOTFS}
+}
+
+create_merged_usr_symlinks_sdk() {
+    create_merged_usr_symlinks ${SDK_OUTPUT}${SDKTARGETSYSROOT}
+}
+
+ROOTFS_PREPROCESS_COMMAND += "${@bb.utils.contains('DISTRO_FEATURES', 'usrmerge', 'create_merged_usr_symlinks_rootfs; ', '',d)}"
+POPULATE_SDK_PRE_TARGET_COMMAND += "${@bb.utils.contains('DISTRO_FEATURES', 'usrmerge', 'create_merged_usr_symlinks_sdk; ', '',d)}"

@@ -7,11 +7,6 @@ export base_sbindir = "${base_prefix}/usr/sbin"
 export base_libdir = "${base_prefix}/usr/${baselib}"
 export nonarch_base_libdir = "${base_prefix}/usr/lib"
 
-#nativesdk
-base_bindir_nativesdk = "${bindir_nativesdk}"
-base_sbindir_nativesdk = "${sbindir_nativesdk}"
-base_libdir_nativesdk = "${libdir_nativesdk}"
-
 target_base_libdir_class-cross = "${target_base_prefix}/usr/lib"
 
 # Disable split-usr support in systemd and point the rootprefix to /usr
